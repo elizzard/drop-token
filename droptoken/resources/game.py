@@ -1,5 +1,6 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, abort
 from droptoken.models.game import GameModel, PlayerModel
+from mongoengine.errors import DoesNotExist, ValidationError
 
 
 # we get input type validation and 400s for free with reqparse
@@ -63,3 +64,38 @@ class GameList(Resource):
         )
         g.save()
         return { "gameId": f"{g.id}"}
+
+class GameDetail(Resource):
+    def get(self, game_id):
+        """
+            Get the state of the game.
+            Output:
+            { 
+                "players" : ["player1", "player2"], # Initial list of players.
+                "state": "DONE/IN_PROGRESS",
+                "winner": "player1",    # in case of draw, winner will be null, state will be DONE.
+                                        # in case game is still in progess, key should not exist.
+            }
+        """
+        # get the game object
+        try:
+            g = GameModel.objects(id=game_id).get()
+        except (DoesNotExist, ValidationError) :
+            abort(404, message=f"Game {game_id} not found.")
+
+        player_list = [ p.name for p in g.players]
+
+        # TODO: use @marshal_with for better validation
+        return (
+            {
+                'players': player_list,
+                'state': g.state,
+                'winner': g.winner
+            } 
+            if g.state == 'DONE' 
+            else {
+                'players': player_list,
+                'state': g.state,
+            }
+        ) 
+        

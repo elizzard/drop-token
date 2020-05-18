@@ -165,6 +165,10 @@ class Moves(Resource):
         if gb.check_win(request_column, row):
             g.state = 'DONE'
             g.winner = p.name
+        # can also be done if board is full
+        elif g.moves.count() + 1 == g.num_cols * g.num_rows:
+            g.state = 'DONE'
+            g.winner = None
 
         move_number = len(moves) + 1
         g.moves.create(turn=move_number, move_type='MOVE', player_name=p.name, column=request_column)
@@ -215,3 +219,46 @@ class Moves(Resource):
         g.save()
 
         return {}
+
+class MoveDetail(Resource):
+    def get(self, game_id, move_id):
+        """
+            Return the move.
+            Output:
+                {
+                "type" : "MOVE",
+                "player": "player1",
+                "column": 2
+                }
+            Status codes:
+                • 200 - OK. On success
+                • 400 - Malformed request (NOTE: not sure how to get this case, there are no params besides the path variables)
+                • 404 - Game/moves not found.
+        """
+        # get the game object
+        try:
+            g = GameModel.objects(id=game_id).get()
+        except (DoesNotExist, ValidationError) :
+            abort(404, message=f"Game {game_id} not found.")
+
+
+        turn = move_id + 1
+        # get the move
+        try:
+            m = g.moves.get(turn=turn)
+        except (DoesNotExist, ValidationError) :
+            abort(404, message=f"Move number {move_id} not found for game {game_id}")
+
+        # TODO: use @marshal_with for better validation
+        return (
+            {
+                'type': m.move_type,
+                'player': m.player_name,
+                'column': m.column
+            } 
+            if m.move_type == 'MOVE' 
+            else {
+                'type': m.move_type,
+                'player': m.player_name,
+            }
+        )

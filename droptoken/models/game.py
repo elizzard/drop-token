@@ -23,7 +23,7 @@ class GameModel(Document):
     num_rows = me.IntField(required=True)
     num_cols = me.IntField(required=True)
     state = me.StringField(max_length=11, required=True, choices=STATE_CHOICES, default='IN_PROGRESS')
-    winner = me.StringField(max_length=50)
+    winner = me.StringField(max_length=50, null=True)
     current_token = me.IntField(required=True, default=1)
     moves = me.EmbeddedDocumentListField(MoveModel, default=[])
      # can possibly use this with save_condition: http://docs.mongoengine.org/apireference.html#mongoengine.Document.save

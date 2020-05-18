@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_mongoengine import MongoEngine
 from flask_restful import Api
-from droptoken.resources.game import GameList
-from droptoken.resources.moves import Moves
+from droptoken.resources.game import GameList, GameDetail
+from droptoken.resources.moves import Moves, MoveDetail
 
 
 app = Flask(__name__)
@@ -19,7 +19,10 @@ api = Api(app) # TODO: use prefix='drop-token' to clean up the routes below
 # from flask_restful import Resource
 # class SiteMap(Resource):
 #     def get(self):
-#         return [str(rule.__dict__) for rule in app.url_map.iter_rules()]
+#         return {
+#             'rules': [str(rule) for rule in app.url_map.iter_rules()],  # rule.__dict__
+#             'converters': [ {k : str(v)} for k,v in app.url_map.converters.items()]
+#         }
 # api.add_resource(SiteMap, '/site-map')
 
 ### End Diagnosing routing issues
@@ -30,8 +33,10 @@ api = Api(app) # TODO: use prefix='drop-token' to clean up the routes below
 # Flask Debug-mode informed me that forwarding may lose the payload in some cases.
 # I am choosing to heed that warning.
 api.add_resource(GameList, '/drop-token', '/drop-token/')
+api.add_resource(GameDetail, '/drop-token/<string:game_id>')
 api.add_resource(Moves, '/drop-token/<string:game_id>/<string:player_id>', 
     '/drop-token/<string:game_id>/<string:player_id>/')
+api.add_resource(MoveDetail, '/drop-token/<string:game_id>/moves/<int:move_id>')
 
 # TODO: this route '/drop_token/<string:game_id>/moves' is currently in conflict with 
 #   '/drop-token/<string:game_id>/<string:player_id>', because player_id a string 
