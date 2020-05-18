@@ -4,6 +4,7 @@ from flask_restful import Api
 from droptoken.resources.game import GameList
 
 app = Flask(__name__)
+# this mongodb is running locally in a docker container
 app.config['MONGODB_SETTINGS'] = {
     "db": "droptokendb",
 }
