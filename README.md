@@ -29,7 +29,7 @@ export FLASK_APP=app.py
 
 ### Run
 
-First, pull dowm and start MongoDB image
+First, pull down and start MongoDB image
 ```
 docker pull mongo
 docker run -p 27017:27017 --name drop-token-mongo -d mongo
@@ -64,8 +64,8 @@ https://www.thepolyglotdeveloper.com/2019/01/getting-started-mongodb-docker-cont
 https://docs.mongodb.com/manual/reference/mongo-shell/
 
 
-To enable flask debug mode, add this to out environment.
-(I left debug=True in the app initialization, but it won't actually happen unless this variabnle is set)
+To enable flask debug mode, add this to environment.
+(I left debug=True in the app initialization, but it won't actually happen unless this variable is set)
 ```
 export FLASK_ENV=development
 ```
