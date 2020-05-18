@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from droptoken.models.game import GameModel
+from droptoken.models.game import GameModel, PlayerModel
 
 
 # we get input type validation and 400s for free with reqparse
@@ -47,8 +47,17 @@ class GameList(Resource):
     """    
     def post(self):
         args = post_parser.parse_args()
+        
+        player_list = [
+            PlayerModel(
+                token_order=i,
+                name=name
+            )
+            for i, name in enumerate(args['players'], start=1)
+        ]
+
         g = GameModel(
-            players=args['players'],
+            players=player_list,
             num_cols=args['columns'],
             num_rows=args['rows']
         )
