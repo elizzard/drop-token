@@ -72,6 +72,7 @@ export FLASK_ENV=development
 
 
 ## Project Structure
+```
 ├── Pipfile                 # dependency management files for pipenv
 ├── Pipfile.lock
 ├── README.md
@@ -85,3 +86,4 @@ export FLASK_ENV=development
     │   └── moves.py
     └── tests
         └── test_logic.py   # This one is a bit scarce - only board game logic tested.
+```

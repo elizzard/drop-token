@@ -48,6 +48,15 @@ class GameList(Resource):
                 • 400 - Malformed request 
         """    
         args = post_parser.parse_args()
+
+        #players == 2
+        num_players = len(args['players'])
+        if num_players != 2:
+            abort(400, message=f"The game can only support 2 players at this time. Received {num_players}")
+
+        #player names unique 
+        if args['players'][0] == args['players'][1]:
+            abort(400, message=f"Player names must be unique. Received {args['players']}")
         
         player_list = [
             PlayerModel(
