@@ -8,7 +8,7 @@ MOVE_CHOICES = ['MOVE', 'QUIT']
 class PlayerModel(me.EmbeddedDocument):
     token = me.IntField(required=True)
     name = me.StringField(max_length=50, required=True)
-    # has_quit = me.BooleanField(choices=[True])  # possibly useful if ever more than 2 players
+    # has_quit = me.BooleanField(choices=[True])  # possibly useful if more than 2 players
 
 
 class MoveModel(me.EmbeddedDocument):

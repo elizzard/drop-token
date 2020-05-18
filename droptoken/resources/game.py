@@ -23,29 +23,29 @@ post_parser.add_argument(
 
 
 class GameList(Resource):
-    """
-    Output
-        { "games" : ["gameid1", "gameid2"] }
-    Status codes
-        • 200 - OK. On success
-    """
     def get(self):
+        """
+            Output
+                { "games" : ["gameid1", "gameid2"] }
+            Status codes
+                • 200 - OK. On success
+        """
         res = [str(r.id) for r in GameModel.objects]
         return { "games": res}
    
-    """
-    Input:
-        { "players": ["player1", "player2"],
-        "columns": 4,
-        "rows": 4
-        }
-    Output:
-        { "gameId": "some_string_token"}
-    Status codes
-        • 200 - OK. On success
-        • 400 - Malformed request 
-    """    
     def post(self):
+        """
+            Input:
+                { "players": ["player1", "player2"],
+                "columns": 4,
+                "rows": 4
+                }
+            Output:
+                { "gameId": "some_string_token"}
+            Status codes
+                • 200 - OK. On success
+                • 400 - Malformed request 
+        """    
         args = post_parser.parse_args()
         
         player_list = [
