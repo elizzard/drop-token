@@ -3,7 +3,7 @@ from droptoken.models.game import GameModel, PlayerModel
 
 
 # we get input type validation and 400s for free with reqparse
-# TODO: add more strict validation on params (# players and # rows/cols)
+# TODO: add more strict validation on params (player names unique, #players == 2 and #rows/cols == 4)
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(
     'players', dest='players', action='append',
@@ -50,7 +50,7 @@ class GameList(Resource):
         
         player_list = [
             PlayerModel(
-                token_order=i,
+                token=i,
                 name=name
             )
             for i, name in enumerate(args['players'], start=1)

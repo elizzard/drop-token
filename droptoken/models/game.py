@@ -6,11 +6,12 @@ STATE_CHOICES = ['IN_PROGRESS', 'DONE']
 MOVE_CHOICES = ['MOVE', 'QUIT']
 
 class PlayerModel(me.EmbeddedDocument):
-    token_order = me.IntField(required=True)
+    token = me.IntField(required=True)
     name = me.StringField(max_length=50, required=True)
+    # has_quit = me.BooleanField(choices=[True])  # possibly useful if ever more than 2 players
 
 
-class Move(me.EmbeddedDocument):
+class MoveModel(me.EmbeddedDocument):
     turn = me.IntField(required=True)
     move_type = me.StringField(max_length=4, required=True, choices=MOVE_CHOICES, default='MOVE')
     player_name = me.StringField(max_length=50, required=True)
@@ -22,7 +23,8 @@ class GameModel(Document):
     num_rows = me.IntField(required=True)
     num_cols = me.IntField(required=True)
     state = me.StringField(max_length=11, required=True, choices=STATE_CHOICES, default='IN_PROGRESS')
-    next_token = me.IntField()
-    moves = me.EmbeddedDocumentListField(Move)
+    winner = me.StringField(max_length=50)
+    current_token = me.IntField(required=True, default=1)
+    moves = me.EmbeddedDocumentListField(MoveModel, default=[])
      # can possibly use this with save_condition: http://docs.mongoengine.org/apireference.html#mongoengine.Document.save
     last_modified = me.DateTimeField(required=True, default=datetime.utcnow) 
